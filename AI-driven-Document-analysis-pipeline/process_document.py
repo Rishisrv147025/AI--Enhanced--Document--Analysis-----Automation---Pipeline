@@ -7,16 +7,6 @@ from src.database import save_invoice_data
 from src.utils import load_tokenizer, load_tag_map
 
 def process_document(file_path, file_type, decision_engine, ner_model=None, tokenizer=None, tag_map=None):
-    """
-    Main function for processing various document types and making decisions.
-    :param file_path: Path to the input document.
-    :param file_type: Type of document (PDF, CSV, XLSX, Image, etc.).
-    :param decision_engine: The decision-making engine based on the advanced NN model.
-    :param ner_model: Pretrained NER model (optional, can be None for documents without NER).
-    :param tokenizer: Tokenizer for the NER model (optional).
-    :param tag_map: Mapping from tags to entity names (optional).
-    :return: Processed document data with decisions.
-    """
     # Extract text based on document type
     file_extractors = {
         "pdf": extract_text_from_pdf,
