@@ -15,9 +15,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def extract_text_from_pdf(file_path):
-    """
-    Extract text from PDF using pdfplumber (better accuracy with tables, headers, etc.).
-    """
     try:
         text = ''
         with pdfplumber.open(file_path) as pdf:
@@ -29,11 +26,6 @@ def extract_text_from_pdf(file_path):
         return None
 
 def preprocess_image(image):
-    """
-    Preprocess the image for OCR: convert to grayscale, apply thresholding, and sharpen.
-    :param image: Input image.
-    :return: Processed image.
-    """
     # Convert to grayscale
     gray_image = image.convert('L')
     
@@ -50,9 +42,6 @@ def preprocess_image(image):
     return final_image
 
 def extract_text_from_image(file_path):
-    """
-    Extract text from image using pytesseract with preprocessing.
-    """
     try:
         image = Image.open(file_path)
         processed_image = preprocess_image(image)
@@ -63,9 +52,6 @@ def extract_text_from_image(file_path):
         return None
 
 def extract_text_from_csv(file_path):
-    """
-    Extract text from CSV files, handling various encodings and data types.
-    """
     try:
         df = pd.read_csv(file_path, encoding='utf-8', engine='python')
         # If needed, clean data (e.g., remove empty rows, handle missing values)
@@ -76,9 +62,6 @@ def extract_text_from_csv(file_path):
         return None
 
 def extract_text_from_xlsx(file_path):
-    """
-    Extract text from XLSX files, handling multiple sheets and potential merged cells.
-    """
     try:
         df = pd.read_excel(file_path, sheet_name=None)  # Read all sheets
         text = ''
@@ -91,11 +74,6 @@ def extract_text_from_xlsx(file_path):
         return None
 
 def extract_text_from_file(file_path):
-    """
-    General function to extract text from various file types.
-    :param file_path: Path to the input file.
-    :return: Extracted text or None if error occurs.
-    """
     file_extension = os.path.splitext(file_path)[1].lower()
     
     if file_extension == '.pdf':
@@ -112,11 +90,6 @@ def extract_text_from_file(file_path):
 
 # Parallelize text extraction for multiple files
 def extract_text_from_multiple_files(file_paths):
-    """
-    Extract text from multiple files in parallel for better performance with large datasets.
-    :param file_paths: List of file paths to process.
-    :return: Dictionary with file path as key and extracted text as value.
-    """
     extracted_texts = {}
     with ThreadPoolExecutor() as executor:
         results = executor.map(extract_text_from_file, file_paths)
@@ -126,7 +99,7 @@ def extract_text_from_multiple_files(file_paths):
 
 # Example usage
 if __name__ == "__main__":
-    file_paths = ["sample.pdf", "sample_image.png", "sample.csv", "sample.xlsx"]
+    file_paths = ["You can update the file path of the document/file/pdf here."]
     texts = extract_text_from_multiple_files(file_paths)
     for file_path, text in texts.items():
-        print(f"Extracted from {file_path}: {text[:200]}...")  # Print first 200 characters of each file's text
+        print(f"Extracted from {file_path}: {text[:200]}...")
