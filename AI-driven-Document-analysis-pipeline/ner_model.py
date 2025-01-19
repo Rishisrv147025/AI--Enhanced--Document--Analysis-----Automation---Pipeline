@@ -6,9 +6,6 @@ from torch.optim import AdamW
 from torch.nn import LayerNorm
 
 class MultiHeadAttentionLayer(nn.Module):
-    """
-    Implements Multi-Head Attention mechanism as an enhancement over simple attention.
-    """
     def __init__(self, hidden_dim, num_heads=4):
         super(MultiHeadAttentionLayer, self).__init__()
         self.num_heads = num_heads
@@ -50,9 +47,6 @@ class MultiHeadAttentionLayer(nn.Module):
         return output, attention_weights
 
 class BiLSTM_CRF_Attn(nn.Module):
-    """
-    BiLSTM with CRF and Multi-Head Attention.
-    """
     def __init__(self, vocab_size, embed_dim, hidden_dim, num_tags, embedding_matrix=None, dropout=0.5, num_heads=4):
         super(BiLSTM_CRF_Attn, self).__init__()
 
@@ -101,16 +95,10 @@ class BiLSTM_CRF_Attn(nn.Module):
         return emissions, attn_out, attn_weights
 
     def forward_crf(self, x, tags):
-        """
-        Computes the CRF loss given the input sequence and target tags.
-        """
         emissions, _, _ = self.forward(x)
         return -self.crf(emissions, tags)  # Negative log-likelihood for CRF loss
 
     def predict(self, x):
-        """
-        Predicts the best tag sequence for the given input using the CRF layer.
-        """
         emissions, _, _ = self.forward(x)
         return self.crf.decode(emissions)  # Return best tag sequence
 
