@@ -8,19 +8,12 @@ import time
 
 # Load the BiLSTM-CRF + Attention NER model
 def load_ner_model(model_path, embedding_matrix, vocab_size, embed_dim, hidden_dim, num_tags):
-    """
-    Load a pre-trained BiLSTM-CRF model with attention for NER.
-    """
     model = BiLSTM_CRF_Attn(vocab_size, embed_dim, hidden_dim, num_tags, embedding_matrix)
     model.load_state_dict(torch.load(model_path))
     model.eval()  # Set the model to evaluation mode
     return model
 
 def tokenize_and_prepare(text, tokenizer, max_length=512):
-    """
-    Tokenizes and prepares text for model inference.
-    Pads and truncates to the max length.
-    """
     tokens = tokenize(text)  # Tokenizing the input text
     token_ids = tokenizer(tokens)  # Converting tokens to ids
     token_ids = token_ids[:max_length]  # Truncate to max length
@@ -28,9 +21,6 @@ def tokenize_and_prepare(text, tokenizer, max_length=512):
     return torch.tensor(token_ids).unsqueeze(0)  # Add batch dimension
 
 def extract_entities_batch(texts, model, tokenizer, tag_map, max_length=512):
-    """
-    Extract entities from a batch of text inputs.
-    """
     batch_input = [tokenize_and_prepare(text, tokenizer, max_length) for text in texts]
     batch_input = torch.cat(batch_input, dim=0)  # Concatenate into a batch
     
@@ -44,10 +34,6 @@ def extract_entities_batch(texts, model, tokenizer, tag_map, max_length=512):
     return all_entities
 
 def decode_entities(tokens, predicted_tags, tag_map):
-    """
-    Decodes predicted tags into entities and maps to a standardized tag.
-    Filters out unnecessary tags.
-    """
     entities = []
     current_entity = None
     
@@ -74,9 +60,6 @@ def decode_entities(tokens, predicted_tags, tag_map):
     return entities
 
 def extract_entities(text, model, tokenizer, tag_map):
-    """
-    Extracts entities from a single text input.
-    """
     tokens = tokenize(text)
     token_ids = tokenizer(tokens)
     token_tensor = torch.tensor(token_ids).unsqueeze(0)  # Add batch dimension
@@ -91,10 +74,6 @@ def extract_entities(text, model, tokenizer, tag_map):
     return entities
 
 def inference_speed_test(model, texts, tokenizer, tag_map):
-    """
-    A function to test the inference speed for a batch of texts.
-    Measures time taken for processing the batch.
-    """
     start_time = time.time()
     _ = extract_entities_batch(texts, model, tokenizer, tag_map)
     end_time = time.time()
@@ -105,25 +84,25 @@ def inference_speed_test(model, texts, tokenizer, tag_map):
 if __name__ == '__main__':
     # Assume the following variables are initialized
     model_path = 'path_to_model.pth'
-    embedding_matrix = np.random.rand(10000, 300)  # Example embedding matrix
+    embedding_matrix = np.random.rand(10000, 300) 
     vocab_size = 10000
     embed_dim = 300
     hidden_dim = 128
     num_tags = 9  # Example number of tags
-    tokenizer = lambda x: x.split()  # Simple tokenizer (space-separated words)
-    tag_map = {0: 'O', 1: 'B-PER', 2: 'I-PER', 3: 'B-ORG', 4: 'I-ORG'}  # Example tag map
+    tokenizer = lambda x: x.split()  
+    tag_map = {0: 'O', 1: 'B-PER', 2: 'I-PER', 3: 'B-ORG', 4: 'I-ORG'}  
 
     # Load the NER model
     model = load_ner_model(model_path, embedding_matrix, vocab_size, embed_dim, hidden_dim, num_tags)
 
     # Extract entities from a single text
-    text = "Elon Musk is the CEO of SpaceX."
+    text = "I am Rishi I have Created this project."
     entities = extract_entities(text, model, tokenizer, tag_map)
     print("Entities:", entities)
 
     # Test batch inference speed
     batch_texts = [
-        "Elon Musk is the CEO of SpaceX.",
-        "Google was founded by Larry Page and Sergey Brin."
+        "My name is Rishi",
+        "I am a ML/DP and Gen AI engineer."
     ]
     inference_speed_test(model, batch_texts, tokenizer, tag_map)
