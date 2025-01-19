@@ -8,7 +8,7 @@ import io
 import os
 import sqlite3
 import logging
-from database import save_invoice_data, create_database  # Assuming database.py is available
+from database import save_invoice_data, create_database
 
 # Set up logging for the Streamlit app
 logging.basicConfig(filename='invoice_app.log', level=logging.INFO, format='%(asctime)s - %(message)s')
