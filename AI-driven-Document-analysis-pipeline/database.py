@@ -103,7 +103,7 @@ async def main():
         'amount': 1500.75,
         'vendor': 'Amazon',
         'vendor_type': 1,
-        'date_feature': 19134,  # Example date feature (days since epoch)
+        'date_feature': 1913, 
         'decision': 'Approved',
         'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
