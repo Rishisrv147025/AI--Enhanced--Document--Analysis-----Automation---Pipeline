@@ -65,11 +65,6 @@ class DecisionEngineAdvanced:
             self.scaler = pickle.load(f)
 
     def extract_features(self, document_data):
-        """
-        Extract features from the document data for prediction.
-        :param document_data: A dictionary containing extracted information from the document.
-        :return: A normalized feature vector for the model.
-        """
         features = [
             document_data.get('amount', 0),
             len(document_data.get('vendor', '')),
@@ -91,25 +86,15 @@ class DecisionEngineAdvanced:
         return 1 if vendor_name in vendor_categories else 0
 
     def date_feature(self, date_string):
-        """
-        Convert the date string to a numerical feature (days since epoch).
-        :param date_string: Date extracted from the document.
-        :return: A numeric representation of the date.
-        """
         if not date_string:
             return 0
         date = datetime.strptime(date_string, "%Y-%m-%d")
-        return (date - datetime(1970, 1, 1)).days  # Return days since the epoch
+        return (date - datetime(1970, 1, 1)).days  
 
     def make_decision(self, document_data):
-        """
-        Make a decision based on the extracted features using the advanced deep learning model.
-        :param document_data: Extracted document data (amount, vendor, date, etc.).
-        :return: A decision label.
-        """
         features = self.extract_features(document_data)
         
-        with torch.no_grad():  # Disable gradient computation for inference
+        with torch.no_grad():  
             output = self.model(features)
         
         decision_idx = torch.argmax(output, dim=1).item()
